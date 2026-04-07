@@ -1,0 +1,31 @@
+C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Armageddon Final\Lab3b/scripts/malgus_audit_evidence_package.py:29: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  "generated_at": datetime.utcnow().isoformat() + "Z",
+C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Armageddon Final\Lab3b/scripts/malgus_audit_evidence_package.py:42: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  end_time = datetime.utcnow()
+C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Armageddon Final\Lab3b/scripts/malgus_audit_evidence_package.py:251: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  zip_filename = f"audit_evidence_bundle_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.zip"
+================================================================================
+Lab 3B — Complete Audit Evidence Package Generator
+APPI Compliance Evidence Bundle
+================================================================================
+ Generating Change Trail Evidence (CloudTrail)...
+ Generating Edge Security Evidence (CloudFront + WAF)...
+ Generating Flow Log Summary...
+
+ Complete audit evidence package generated!
+ Main bundle: audit_evidence_package.json
+ ZIP package: audit_evidence_bundle_20260402_175801.zip
+ Auditor README: AUDIT_README.md
+
+================================================================================
+Evidence Summary:
+{
+  "total_proofs_generated": 3,
+  "data_residency": "See separate data_residency_proof.json",
+  "network_corridor": "See separate network_corridor_proof.json",
+  "change_monitoring": "CloudTrail active in both regions",
+  "edge_protection": "CloudFront + WAF protecting application",
+  "network_monitoring": "0 Flow Logs active",
+  "overall_status": " COMPLIANT WITH APPI REQUIREMENTS"
+}
+================================================================================

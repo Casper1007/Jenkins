@@ -1,0 +1,123 @@
+C:\Users\caspe\Documents\TheoWAF\class7\Armageddon\Armageddon Final\Armageddon Final\Lab3b/scripts/malgus_network_corridor_proof.py:133: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+  "timestamp": datetime.utcnow().isoformat() + "Z",
+================================================================================
+Lab 3B — Network Corridor Proof (TGW Path Evidence)
+APPI Compliance: Controlled Cross-Region Routing
+================================================================================
+
+Evidence Summary:
+  Tokyo TGWs: 2
+  São Paulo TGWs: 2
+  Active Peerings: 2
+  VPC Peering Violations: 0
+
+  Compliance Status: PASS
+
+Evidence saved to: network_corridor_proof.json
+================================================================================
+
+Full Evidence:
+{
+  "timestamp": "2026-04-02T17:56:16.393519Z",
+  "compliance_framework": "APPI",
+  "proof_type": "network_corridor",
+  "transit_gateways": {
+    "tokyo": [
+      {
+        "tgw_id": "tgw-05e617c675361d7c3",
+        "state": "available",
+        "description": "shinjuku-tgw01 (Tokyo hub)",
+        "default_route_table_association": "disable",
+        "default_route_table_propagation": "disable"
+      },
+      {
+        "tgw_id": "tgw-0d0187373eaf8f623",
+        "state": "available",
+        "description": "shinjuku-tgw01 (Tokyo hub)",
+        "default_route_table_association": "disable",
+        "default_route_table_propagation": "disable"
+      }
+    ],
+    "saopaulo": [
+      {
+        "tgw_id": "tgw-01144921b0bea9f52",
+        "state": "available",
+        "description": "liberdade-tgw01 (Sao Paulo spoke)",
+        "default_route_table_association": "enable",
+        "default_route_table_propagation": "enable"
+      },
+      {
+        "tgw_id": "tgw-03df33966d3e58980",
+        "state": "available",
+        "description": "liberdade-tgw01 (Sao Paulo spoke)",
+        "default_route_table_association": "disable",
+        "default_route_table_propagation": "disable"
+      }
+    ]
+  },
+  "peering_attachments": {
+    "tokyo": [
+      {
+        "attachment_id": "tgw-attach-03e6d5b90183e6654",
+        "state": "available",
+        "local_tgw": "tgw-0d0187373eaf8f623",
+        "peer_tgw": "tgw-03df33966d3e58980",
+        "peer_region": "sa-east-1",
+        "requester_region": "ap-northeast-1",
+        "accepter_region": "sa-east-1"
+      }
+    ],
+    "saopaulo": [
+      {
+        "attachment_id": "tgw-attach-03e6d5b90183e6654",
+        "state": "available",
+        "local_tgw": "tgw-03df33966d3e58980",
+        "peer_tgw": "tgw-0d0187373eaf8f623",
+        "peer_region": "ap-northeast-1",
+        "requester_region": "ap-northeast-1",
+        "accepter_region": "sa-east-1"
+      }
+    ]
+  },
+  "route_tables": {
+    "tokyo": [
+      {
+        "route_table_id": "tgw-rtb-0990e23799910078e",
+        "state": "available",
+        "routes": [
+          {
+            "cidr": "10.0.0.0/16",
+            "attachment_id": "tgw-attach-07dc803789f374602",
+            "type": "propagated"
+          }
+        ]
+      }
+    ],
+    "saopaulo": [
+      {
+        "route_table_id": "tgw-rtb-078e391be3a23d579",
+        "state": "available",
+        "routes": []
+      }
+    ]
+  },
+  "vpc_peering_connections": {
+    "tokyo": [],
+    "saopaulo": []
+  },
+  "compliance_check": {
+    "tokyo_has_tgw": true,
+    "saopaulo_has_tgw": true,
+    "peering_exists": true,
+    "peering_active": true,
+    "no_vpc_peering": true,
+    "assertion": "PASS"
+  },
+  "evidence_summary": {
+    "description": "Transit Gateway provides controlled corridor between regions",
+    "tokyo_tgw_count": 2,
+    "saopaulo_tgw_count": 2,
+    "active_peerings": 2,
+    "vpc_peering_violations": 0
+  }
+}

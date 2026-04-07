@@ -1,0 +1,35 @@
+﻿Verification run: 2026-04-02 America/Chicago
+Environment: local CLI (no AWS credentials detected) — commands listed but not executed.
+
+Checks outlined in readme.md / lab brief
+-------------------------------------------------
+1) Data residency (Tokyo-only RDS)
+   - `aws rds describe-db-instances --region ap-northeast-1 --query "DBInstances[].{DB:DBInstanceIdentifier,AZ:AvailabilityZone,Region:'ap-northeast-1',Endpoint:Endpoint.Address}"`
+   - `aws rds describe-db-instances --region sa-east-1 --query "DBInstances[].DBInstanceIdentifier"`
+
+2) São Paulo EC2 -> Tokyo RDS path
+   - DNS/TCP reachability: `nc -vz <tokyo-rds-endpoint> 3306`
+   - App-level read/write (MySQL example): `mysql -h <tokyo-rds-endpoint> -u appuser -p -e "CREATE TABLE IF NOT EXISTS codex_health(t varchar(32)); INSERT INTO codex_health VALUES(UUID()); SELECT COUNT(*) FROM codex_health; DELETE FROM codex_health;"`
+   - No local DB/processes: `ss -lntp | findstr 3306 5432`; `systemctl list-unit-files | findstr -i mysql postgres`; `docker ps --format '{{.Image}}' | findstr -i mysql postgres`
+
+3) Network corridor via TGW only
+   - TGW attachments both regions: `aws ec2 describe-transit-gateway-vpc-attachments --region sa-east-1 --filters Name=transit-gateway-id,Values=tgw-*` (repeat in ap-northeast-1)
+   - TGW route tables contain cross-region CIDRs: `aws ec2 search-transit-gateway-routes --transit-gateway-route-table-id <tgw-rtb> --region sa-east-1 --filters Name=route-search.subnet-of-match,Values=<tokyo-cidr>` (and reverse)
+   - VPC route tables send cross-region CIDRs to TGW: `aws ec2 describe-route-tables --region sa-east-1 --filters Name=vpc-id,Values=<sp-vpc>` (repeat in ap-northeast-1)
+   - Path sample: `tracert <tokyo-rds-endpoint>` from São Paulo EC2 (first non-VPC hop should be TGW ENI)
+
+4) Edge/WAF/Logs (evidence hooks)
+   - CloudFront header sample: `curl -I https://chrisbdevsecops.com/api/public-feed`
+   - CloudFront log retrieval: `aws s3 ls s3://Class_Lab3/cloudfront-logs/ --recursive | tail -n 20` then `aws s3 cp s3://Class_Lab3/cloudfront-logs/<file>.gz .`
+   - WAF summary script available: `python malgus_waf_summary.py`
+   - CloudTrail change audit: `python malgus_cloudtrail_last_changes.py`
+
+Compliance guardrails to confirm during evidence review
+-------------------------------------------------------
+- No RDS outside ap-northeast-1; no cross-region replicas; no Aurora Global Database.
+- No local caching of patient records in São Paulo; CloudFront not caching PHI.
+- Architecture remains single-primary (Tokyo) with traffic over TGW only.
+
+Result
+------
+Pending: Commands not run in this environment. Execute above on the target AWS accounts/instances and paste outputs into deliverables.
